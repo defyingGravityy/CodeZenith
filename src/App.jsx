@@ -1,50 +1,53 @@
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'
-import './App.css'
+import React, { useState } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
+import Features from './pages/Features';
+import Dashboard from './pages/Dashboard';
+import History from './pages/History';
 
-function Navbar() {
-  return (
-    <nav className="navbar">
-      <div className="logo">🚀 ResumePro</div>
-      <div className="nav-links">
-        <Link to="/features">Features</Link>
-        <Link to="/signin">Sign In</Link>
-        <Link to="/signup">Sign Up</Link>
-      </div>
-    </nav>
-  )
-}
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState(null);
 
-function Home() {
-  return (
-    <div className="home">
-      <h1>Welcome to ResumePro</h1>
-      <p>Your AI-powered resume and cover letter enhancer. Get noticed faster 🚀</p>
-    </div>
-  )
-}
+  const handleLogin = (data) => {
+    setIsAuthenticated(true);
+    setUserData(data);
+  };
 
-function Features() {
-  return <h2>Please sign in to view the features.</h2>
-}
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserData(null);
+  };
 
-function SignIn() {
-  return <h2>Sign In Page (coming soon)</h2>
-}
-
-function SignUp() {
-  return <h2>Sign Up Page (coming soon)</h2>
-}
-
-export default function App() {
   return (
     <>
-      <Navbar />
+      <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/features" element={<Features />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route
+          path="/signup"
+          element={<SignUp onSignUp={handleLogin} />}
+        />
+        <Route
+          path="/signin"
+          element={<SignIn onSignIn={handleLogin} />}
+        />
+        <Route
+          path="/features"
+          element={
+            isAuthenticated ? <Dashboard /> : <Features />
+          }
+        />
+        <Route
+          path="/history"
+          element={isAuthenticated ? <History /> : <Navigate to="/signin" />}
+        />
       </Routes>
     </>
-  )
+  );
 }
+
+export default App;

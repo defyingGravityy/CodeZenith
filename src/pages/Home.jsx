@@ -1,27 +1,12 @@
-import React from 'react';
-import './Home.css'; // Import any styles needed
-
-const Home = () => {
+export default function Home() {
   return (
-    <div className="home-container">
-      <h1>Welcome to My Vite App!</h1>
-      <p>This is the home page. Here you can find the latest updates and features.</p>
-
-      <section className="features">
-        <h2>Features</h2>
-        <ul>
-          <li>Feature 1: Description</li>
-          <li>Feature 2: Description</li>
-          <li>Feature 3: Description</li>
-        </ul>
-      </section>
-
-      <section className="updates">
-        <h2>Latest Updates</h2>
-        <p>Stay tuned for the latest news and updates regarding our app!</p>
-      </section>
-    </div>
+    <section className="hero">
+      <h1>Land Your Dream Job with <span className="highlight">ResumeBoost</span></h1>
+      <p>Our AI-powered tools enhance your resume and generate tailored cover letters to help you stand out in the job market.</p>
+      <div className="buttons">
+        <a href="/signup" className="btn primary">Get Started Free →</a>
+        <a href="/features" className="btn secondary">Learn More</a>
+      </div>
+    </section>
   );
-};
-
-export default Home;
+}
