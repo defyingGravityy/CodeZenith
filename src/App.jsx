@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
@@ -7,10 +8,12 @@ import SignIn from './pages/SignIn';
 import Features from './pages/Features';
 import Dashboard from './pages/Dashboard';
 import History from './pages/History';
+import PageTransition from './components/PageTransition';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState(null);
+  const location = useLocation();
 
   const handleLogin = (data) => {
     setIsAuthenticated(true);
@@ -25,27 +28,54 @@ function App() {
   return (
     <>
       <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/signup"
-          element={<SignUp onSignUp={handleLogin} />}
-        />
-        <Route
-          path="/signin"
-          element={<SignIn onSignIn={handleLogin} />}
-        />
-        <Route
-          path="/features"
-          element={
-            isAuthenticated ? <Dashboard /> : <Features />
-          }
-        />
-        <Route
-          path="/history"
-          element={isAuthenticated ? <History /> : <Navigate to="/signin" />}
-        />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route 
+            path="/" 
+            element={
+              <PageTransition>
+                <Home />
+              </PageTransition>
+            } 
+          />
+          <Route
+            path="/signup"
+            element={
+              <PageTransition>
+                <SignUp onSignUp={handleLogin} />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/signin"
+            element={
+              <PageTransition>
+                <SignIn onSignIn={handleLogin} />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/features"
+            element={
+              <PageTransition>
+                {isAuthenticated ? <Dashboard /> : <Features />}
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              isAuthenticated ? (
+                <PageTransition>
+                  <History />
+                </PageTransition>
+              ) : (
+                <Navigate to="/signin" />
+              )
+            }
+          />
+        </Routes>
+      </AnimatePresence>
     </>
   );
 }
